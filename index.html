@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploration | Carnets de Voyage</title>
+    <style>
+        /* --- RESET & STYLES DE BASE --- */
+        :root {
+            --primary-color: #2c3e50; /* Gris-bleu foncé pour le texte */
+            --accent-color: #3498db; /* Bleu vif pour les liens/boutons */
+            --bg-color: #ffffff;
+            --card-bg: #f9f9f9;
+            --font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            --max-width: 1100px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s ease;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* --- NAVIGATION --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95); /* Légèrement transparent */
+            backdrop-filter: blur(10px); /* Effet de flou */
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-transform: lowercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-color);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- HERO SECTION (Accueil) --- */
+        .hero {
+            height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            color: white;
+            padding: 0 20px;
+            margin-top: 80px; /* Pour compenser le header fixed */
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4); /* Assombrir l'image de fond */
+        }
+
+        .hero-content {
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 30px;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: white;
+            color: var(--primary-color);
+            padding: 12px 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* --- SECTION GRILLE (Destinations) --- */
+        .destinations {
+            padding: 100px 40px;
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            letter-spacing: -1.5px;
+        }
+
+        .dest-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .dest-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #eee;
+        }
+
+        .dest-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .dest-img-container {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .dest-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .dest-card:hover .dest-img-container img {
+            transform: scale(1.05);
+        }
+
+        .dest-info {
+            padding: 25px;
+        }
+
+        .dest-location {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .dest-country {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+
+        .dest-desc {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .dest-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #95a5a6;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            opacity: 0.7;
+        }
+
+        /* --- RESPONSIVE (Mobile) --- */
+        @media (max-width: 768px) {
+            header {
+                padding: 20px;
+            }
+            .nav-links {
+                display: none; /* Cacher le menu sur mobile (simplifié) */
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .destinations {
+                padding: 60px 20px;
+            }
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <div class="logo"><a href="#">Exploration.</a></div>
+        <ul class="nav-links">
+            <li><a href="#destinations">Destinations</a></li>
+            <li><a href="#apropos">À Propos</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>L'aventure commence ici.</h1>
+            <p>Des guides de voyage immersifs et des récits inspirants pour explorer le monde, un pays à la fois.</p>
+            <a href="#destinations" class="btn">Explorer les destinations</a>
+        </div>
+    </section>
+
+    <!-- Section Destinations -->
+    <section id="destinations" class="destinations">
+        <h2 class="section-title">Inspirez-vous</h2>
+        
+        <div class="dest-grid">
+            <!-- Carte 1 -->
+            <article class="dest-card">
+                <div class="dest-img-container">
+                    <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=600" alt="Kyoto, Japon">
+                </div>
+                <div class="dest-info">
+                    <h3 class="dest-location">Kyoto</h3>
+                    <p class="dest-country">Japon</p>
+                    <p class="dest-desc">Entre temples anciens et quartiers traditionnels, plongez au cœur de l'élégance japonaise.</p>
+                    <div class="dest-meta">
+                        <span>5 jours</span>
+                        <span>Culture & Nature</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Carte 2 -->
+            <article class="dest-card">
+                <div class="dest-img-container">
+                    <img src="https://images.unsplash.com/photo-1453791052107-5c843da62d97?q=80&w=600" alt="Santorin, Grèce">
+                </div>
+                <div class="dest-info">
+                    <h3 class="dest-location">Santorin</h3>
+                    <p class="dest-country">Grèce</p>
+                    <p class="dest-desc">Les célèbres couchers de soleil, les maisons blanches et les eaux bleues de la mer Égée.</p>
+                    <div class="dest-meta">
+                        <span>4 jours</span>
+                        <span>Luxe & Détente</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Carte 3 -->
+            <article class="dest-card">
+                <div class="dest-img-container">
+                    <img src="https://images.unsplash.com/photo-1515876305420-69432b519b6c?q=80&w=600" alt="New York City, USA">
+                </div>
+                <div class="dest-info">
+                    <h3 class="dest-location">New York City</h3>
+                    <p class="dest-country">USA</p>
+                    <p class="dest-desc">L'effervescence de la ville qui ne dort jamais. De Central Park aux lumières de Times Square.</p>
+                    <div class="dest-meta">
+                        <span>6 jours</span>
+                        <span>Urbain & Art</span>
+                    </div>
+                </div>
+            </article>
+            
+             <!-- Carte 4 -->
+            <article class="dest-card">
+                <div class="dest-img-container">
+                    <img src="https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?q=80&w=600" alt="Dolomites, Italie">
+                </div>
+                <div class="dest-info">
+                    <h3 class="dest-location">Les Dolomites</h3>
+                    <p class="dest-country">Italie</p>
+                    <p class="dest-desc">Des paysages de montagne spectaculaires, parfaits pour la randonnée et les photographes.</p>
+                    <div class="dest-meta">
+                        <span>7 jours</span>
+                        <span>Aventure & Plein air</span>
+                    </div>
+                </div>
+            </article>
+            
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-links">
+            <a href="#">À Propos</a>
+            <a href="#">Mentions légales</a>
+            <a href="#">Partenariats</a>
+        </div>
+        <p class="copyright">© 2024 Exploration. Tous droits réservés. Site généré par une IA.</p>
+    </footer>
+
+</body>
+</html>
